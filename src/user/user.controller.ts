@@ -3,17 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  ParseUUIDPipe,
+  Put,
   HttpException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'node:crypto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -26,40 +28,50 @@ export class UserController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: UUID) {
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
-      const user = this.userService.findOne(id);
+      const user = await this.userService.findOne(id);
       if (user) {
         return user;
       }
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: 'This is a custom message',
-        },
-        HttpStatus.NOT_FOUND,
-        {
-          cause: error,
-        },
-      );
+      throw new NotFoundException(`User with id ${id} not found`);
     }
   }
 
-  @Patch(':id')
-  @HttpCode(HttpStatus.CREATED)
-  update(@Param('id') id: UUID, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: UUID,
+    @Body() updatePassword: UpdatePasswordDto,
+  ) {
+    try {
+      const user = await this.userService.updatePassword(id, updatePassword);
+      if (user) {
+        return user;
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: UUID) {
-    return this.userService.remove(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
+    try {
+      await this.userService.remove(id);
+    } catch (error) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
   }
 }

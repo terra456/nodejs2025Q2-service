@@ -52,7 +52,7 @@ class DBTable<T extends MyType> {
     const ind = this.array.findIndex((el) => el.id === id);
     if (ind > 0) {
       this.array.splice(ind, 1);
-      return this.array[ind];
+      return true;
     }
   };
 }
@@ -78,7 +78,7 @@ class Users extends DBTable<User> {
       const date = Date.now();
       const user = this.array[ind];
       const newUser = {
-        id,
+        id: user.id,
         version: user.version + 1, // integer number, increments on update
         createdAt: user.createdAt, // timestamp of creation
         updatedAt: date,
@@ -89,6 +89,27 @@ class Users extends DBTable<User> {
       return this.array[ind];
     }
   };
+
+  // changePassword = async (id: UUID, data: UpdatePasswordDto) => {
+  //   const ind = this.array.findIndex((el) => el.id === id);
+  //   if (ind > 0 && this.array[ind].password === data.oldPassword) {
+  //     const date = Date.now();
+  //     const user = this.array[ind];
+  //     // const newUser = {
+  //     //   id,
+  //     //   version: user.version + 1, // integer number, increments on update
+  //     //   createdAt: user.createdAt, // timestamp of creation
+  //     //   updatedAt: date,
+  //     //   login: data.login ? data.login : user.login,
+  //     //   password: data.password ? data.password : user.password,
+  //     // };
+  //     user.password = data.newPassword;
+  //     user.version += 1;
+  //     user.updatedAt = date;
+  //     // this.array.splice(ind, 1, newUser);
+  //     return this.array[ind];
+  //   }
+  // };
 }
 class Artists extends DBTable<Artist> {}
 class Tracks extends DBTable<Track> {}

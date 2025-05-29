@@ -9,6 +9,11 @@ export interface User {
   updatedAt: number; // timestamp of last update
 }
 
+export interface UpdatePassword {
+  oldPassword: string; // previous password
+  newPassword: string; // new password
+}
+
 export interface Artist {
   id: UUID; // uuid v4
   name: string;
