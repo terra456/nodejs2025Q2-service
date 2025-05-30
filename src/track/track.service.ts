@@ -33,7 +33,7 @@ export class TrackService {
   }
 
   async remove(id: UUID) {
-    const track = await this.db.tracks.delete(id);
+    const track = await this.db.deleteTrack(id);
     if (!track) {
       throw new Error('Not found');
     }

@@ -1,5 +1,5 @@
 import { randomUUID, UUID } from 'node:crypto';
-import { Album, Artist, Favorites, Track, User } from 'src/types/types';
+import { Album, Artist, Track, User } from 'src/types/types';
 
 type MyType = {
   id: UUID;
@@ -27,7 +27,6 @@ class DBTable<T extends MyType> {
   add = async (data) => {
     const id = randomUUID();
     const newInd = this.array.push({ id, ...data });
-    console.log(data.name, this.array[newInd - 1]);
     return this.array[newInd - 1];
   };
 
@@ -40,7 +39,6 @@ class DBTable<T extends MyType> {
   };
 
   delete = async (id: UUID) => {
-    console.log(this.array);
     const ind = this.array.findIndex((el) => el.id === id);
     if (ind > 0) {
       this.array.splice(ind, 1);
@@ -54,7 +52,6 @@ class DBTable<T extends MyType> {
         Object.defineProperty(el, 'artistId', { value: null });
       }
     });
-    console.log(id, this.array);
   };
 
   delAlbum = (id: UUID) => {
@@ -82,7 +79,6 @@ class Users extends DBTable<User> {
   };
 
   change = async (id: UUID, data) => {
-    console.log('user', this.array);
     const ind = this.array.findIndex((el) => el.id === id);
     if (ind > 0) {
       const date = Date.now();
@@ -106,12 +102,6 @@ class Tracks extends DBTable<Track> {}
 
 class Albums extends DBTable<Album> {}
 
-class Favorites {
-  artists: UUID[] = []; // favorite artists ids
-  albums: UUID[] = []; // favorite albums ids
-  tracks: UUID[] = [];
-}
-
 const users = new Users();
 const artists = new Artists();
 const tracks = new Tracks();
@@ -122,27 +112,54 @@ export default class DBClass {
   artists: Artists;
   tracks: Tracks;
   albums: Albums;
-  // favorites: any;
+  favorites: { artists: UUID[]; albums: UUID[]; tracks: UUID[] };
   constructor() {
     this.users = users;
     this.artists = artists;
     this.tracks = tracks;
     this.albums = albums;
-    // this.favorites: Favorites = {
-    //   artists: [], // favorite artists ids
-    //   albums: [], // favorite albums ids
-    //   tracks: [],
-    // };
+    this.favorites = {
+      artists: [],
+      albums: [],
+      tracks: [],
+    };
   }
 
+  getAllFavorites = async () => {
+    try {
+      const artists = await Promise.all(
+        this.favorites.artists.map((id) => this.artists.get(id)),
+      );
+      const albums = await Promise.all(
+        this.favorites.albums.map((id) => this.albums.get(id)),
+      );
+      const tracks = await Promise.all(
+        this.favorites.tracks.map((id) => this.tracks.get(id)),
+      );
+      const res = {
+        artists: artists.filter((el) => el),
+        albums: albums.filter((el) => el),
+        tracks: tracks.filter((el) => el),
+      };
+      return res;
+    } catch (error) {}
+  };
+
   deleteArtist = async (id: UUID) => {
+    this.favorites.artists.filter((el) => el !== id);
     this.tracks.delArtist(id);
     this.albums.delArtist(id);
     return this.artists.delete(id);
   };
 
   deleteAlbum = async (id: UUID) => {
+    this.favorites.albums.filter((el) => el !== id);
     this.tracks.delAlbum(id);
     return this.albums.delete(id);
+  };
+
+  deleteTrack = async (id: UUID) => {
+    this.favorites.tracks.filter((el) => el !== id);
+    return this.tracks.delete(id);
   };
 }
