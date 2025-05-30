@@ -1,20 +1,10 @@
 import { randomUUID, UUID } from 'node:crypto';
 import { Album, Artist, Favorites, Track, User } from 'src/types/types';
 
-export default class DBClass {
-  users = new Users();
-  artists = new Artists();
-  tracks = new Tracks();
-  albums = new Albums();
-  favorites: Favorites = {
-    artists: [], // favorite artists ids
-    albums: [], // favorite albums ids
-    tracks: [],
-  };
-}
-
 type MyType = {
   id: UUID;
+  artistId?: UUID | null;
+  albumId?: UUID | null;
 };
 
 class DBTable<T extends MyType> {
@@ -37,6 +27,7 @@ class DBTable<T extends MyType> {
   add = async (data) => {
     const id = randomUUID();
     const newInd = this.array.push({ id, ...data });
+    console.log(data.name, this.array[newInd - 1]);
     return this.array[newInd - 1];
   };
 
@@ -49,11 +40,29 @@ class DBTable<T extends MyType> {
   };
 
   delete = async (id: UUID) => {
+    console.log(this.array);
     const ind = this.array.findIndex((el) => el.id === id);
     if (ind > 0) {
       this.array.splice(ind, 1);
       return true;
     }
+  };
+
+  delArtist = (id: UUID) => {
+    this.array.forEach((el) => {
+      if (el.artistId && el.artistId === id) {
+        Object.defineProperty(el, 'artistId', { value: null });
+      }
+    });
+    console.log(id, this.array);
+  };
+
+  delAlbum = (id: UUID) => {
+    this.array.forEach((el) => {
+      if (el.albumId && el.albumId === id) {
+        Object.defineProperty(el, 'albumId', { value: null });
+      }
+    });
   };
 }
 
@@ -73,6 +82,7 @@ class Users extends DBTable<User> {
   };
 
   change = async (id: UUID, data) => {
+    console.log('user', this.array);
     const ind = this.array.findIndex((el) => el.id === id);
     if (ind > 0) {
       const date = Date.now();
@@ -91,5 +101,48 @@ class Users extends DBTable<User> {
   };
 }
 class Artists extends DBTable<Artist> {}
+
 class Tracks extends DBTable<Track> {}
+
 class Albums extends DBTable<Album> {}
+
+class Favorites {
+  artists: UUID[] = []; // favorite artists ids
+  albums: UUID[] = []; // favorite albums ids
+  tracks: UUID[] = [];
+}
+
+const users = new Users();
+const artists = new Artists();
+const tracks = new Tracks();
+const albums = new Albums();
+
+export default class DBClass {
+  users: Users;
+  artists: Artists;
+  tracks: Tracks;
+  albums: Albums;
+  // favorites: any;
+  constructor() {
+    this.users = users;
+    this.artists = artists;
+    this.tracks = tracks;
+    this.albums = albums;
+    // this.favorites: Favorites = {
+    //   artists: [], // favorite artists ids
+    //   albums: [], // favorite albums ids
+    //   tracks: [],
+    // };
+  }
+
+  deleteArtist = async (id: UUID) => {
+    this.tracks.delArtist(id);
+    this.albums.delArtist(id);
+    return this.artists.delete(id);
+  };
+
+  deleteAlbum = async (id: UUID) => {
+    this.tracks.delAlbum(id);
+    return this.albums.delete(id);
+  };
+}

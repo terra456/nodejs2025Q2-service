@@ -33,7 +33,7 @@ export class ArtistService {
   }
 
   async remove(id: UUID) {
-    const artist = await this.db.artists.delete(id);
+    const artist = await this.db.deleteArtist(id);
     if (!artist) {
       throw new Error('Not found');
     }

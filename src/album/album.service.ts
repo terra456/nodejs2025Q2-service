@@ -33,7 +33,7 @@ export class AlbumService {
   }
 
   async remove(id: UUID) {
-    const album = await this.db.albums.delete(id);
+    const album = await this.db.deleteAlbum(id);
     if (!album) {
       throw new Error('Not found');
     }
