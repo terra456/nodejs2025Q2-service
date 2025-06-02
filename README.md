@@ -35,8 +35,14 @@ mv .env.example .env
 npm start 
 ```
 
+## Running application in dev mode
+
+``` 
+npm run start:dev
+```
+
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+in your browser OpenAPI (with swagger) documentation by typing http://localhost:4000/doc/.
 
 ## Testing
 
