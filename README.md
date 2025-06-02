@@ -8,7 +8,13 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone git@github.com:terra456/nodejs2025Q2-service.git
+```
+
+## Change branch to develop
+
+```
+git checkout develop
 ```
 
 ## Installing NPM modules
@@ -17,15 +23,20 @@ git clone {repository URL}
 npm install
 ```
 
+## Rename .env.example
+
+```
+mv .env.example .env
+```
+
 ## Running application
 
 ```
-npm start
+npm start 
 ```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Testing
 
@@ -65,8 +76,3 @@ npm run lint
 npm run format
 ```
 
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
