@@ -39,7 +39,7 @@ export class AlbumController {
   @ApiBadRequestResponse({
     description: 'Bad request. body does not contain required fields.',
   })
-  create(@Body() createAlbumDto: CreateAlbumDto) {
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
   }
 
@@ -48,7 +48,7 @@ export class AlbumController {
     description: 'Get all albums',
     type: [Album],
   })
-  findAll() {
+  async findAll() {
     return this.albumService.findAll();
   }
 

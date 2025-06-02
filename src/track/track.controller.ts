@@ -39,7 +39,7 @@ export class TrackController {
   @ApiBadRequestResponse({
     description: 'Bad request. body does not contain required fields.',
   })
-  create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto) {
     return this.trackService.create(createTrackDto);
   }
 
@@ -49,7 +49,7 @@ export class TrackController {
     description: 'Get all tracks',
     type: [Track],
   })
-  findAll() {
+  async findAll() {
     return this.trackService.findAll();
   }
 

@@ -41,7 +41,7 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad request. body does not contain required fields.',
   })
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -51,7 +51,7 @@ export class UserController {
     description: 'Get all users',
     type: [User],
   })
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
 

@@ -46,7 +46,7 @@ class DBTable<T extends MyType> {
     }
   };
 
-  delArtist = (id: UUID) => {
+  delArtist = async (id: UUID) => {
     this.array.forEach((el) => {
       if (el.artistId && el.artistId === id) {
         Object.defineProperty(el, 'artistId', { value: null });
@@ -54,7 +54,7 @@ class DBTable<T extends MyType> {
     });
   };
 
-  delAlbum = (id: UUID) => {
+  delAlbum = async (id: UUID) => {
     this.array.forEach((el) => {
       if (el.albumId && el.albumId === id) {
         Object.defineProperty(el, 'albumId', { value: null });

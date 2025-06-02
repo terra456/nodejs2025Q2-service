@@ -39,7 +39,7 @@ export class ArtistController {
   @ApiBadRequestResponse({
     description: 'Bad request. body does not contain required fields.',
   })
-  create(@Body() createArtistDto: CreateArtistDto) {
+  async create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
 
@@ -49,7 +49,7 @@ export class ArtistController {
     description: 'Get all artists',
     type: [Artist],
   })
-  findAll() {
+  async findAll() {
     return this.artistService.findAll();
   }
 
