@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Controller,
   Get,
@@ -43,7 +42,12 @@ export class UserController {
     description: 'Bad request. body does not contain required fields.',
   })
   async create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    try {
+      const user = await this.userService.create(createUserDto);
+      return user;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get()
@@ -77,37 +81,37 @@ export class UserController {
     }
   }
 
-  // @Put(':id')
-  // @HttpCode(HttpStatus.OK)
-  // @ApiBody({
-  //   description: `Updates a user's password by ID`,
-  //   type: UpdatePasswordDto,
-  // })
-  // @ApiOkResponse({
-  //   description: `The user has been updated.`,
-  //   type: User,
-  // })
-  // @ApiBadRequestResponse({
-  //   description: 'Bad request. userId is invalid (not uuid)',
-  // })
-  // @ApiForbiddenResponse({ description: 'oldPassword is wrong' })
-  // @ApiNotFoundResponse({ description: 'User not found' })
-  // async update(
-  //   @Param('id', new ParseUUIDPipe()) id: UUID,
-  //   @Body() updatePassword: UpdatePasswordDto,
-  // ) {
-  //   try {
-  //     const user = await this.userService.updatePassword(id, updatePassword);
-  //     if (user) {
-  //       return user;
-  //     }
-  //   } catch (error) {
-  //     if (error instanceof HttpException) {
-  //       throw error;
-  //     }
-  //     throw new NotFoundException(`User with id ${id} not found`);
-  //   }
-  // }
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({
+    description: `Updates a user's password by ID`,
+    type: UpdatePasswordDto,
+  })
+  @ApiOkResponse({
+    description: `The user has been updated.`,
+    type: User,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request. userId is invalid (not uuid)',
+  })
+  @ApiForbiddenResponse({ description: 'oldPassword is wrong' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: UUID,
+    @Body() updatePassword: UpdatePasswordDto,
+  ) {
+    try {
+      const user = await this.userService.updatePassword(id, updatePassword);
+      if (user) {
+        return user;
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+  }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

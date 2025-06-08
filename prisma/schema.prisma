@@ -18,8 +18,8 @@ model User {
   login     String
   password  String
   version   Int
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt @default(now())
+  createdAt Int
+  updatedAt Int
   User_favs User_favs[]
 }
 
