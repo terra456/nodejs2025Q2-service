@@ -20,10 +20,16 @@ git checkout develop2
 ## Rename .env.example
 
 ```
-mv .env.example .env
+cp .env.example .env
 ```
 
+## Build docker image
 
+```
+docker compose -f docker-compose.yml up --build -d
+```
+
+Server is avaliable http://localhost:4000
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI (with swagger) documentation by typing http://localhost:4000/doc/.
