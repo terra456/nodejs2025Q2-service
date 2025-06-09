@@ -5,8 +5,6 @@ WORKDIR /app
 
 COPY ["package.json", "package-lock.json", "tsconfig.json", ".env", "./"]
 
-# Install dependencies
-RUN npm cache clean --force
 RUN npm install --legacy-peer-deps
 
 COPY . .

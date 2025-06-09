@@ -22,23 +22,27 @@ services:
 
   server:
     build: 
-      context: .  
+      context: .
       dockerfile: Dockerfile
     ports:
       - ${PORT}:${PORT}
     stdin_open: true
     tty: true  # Keeps the container running for debugging
+    restart: always
     depends_on:
       postgres_db:
         condition: service_healthy
     env_file:
       - .env
+    volumes:
+    - ./src:/app/src
     networks:
       - prisma-network
 
 networks:
   prisma-network:
     name: prisma-network
+    driver: bridge
 
 volumes:
   postgres_data:

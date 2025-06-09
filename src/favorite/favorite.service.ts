@@ -9,7 +9,26 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class FavoriteService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+    this.start();
+  }
+
+  async start() {
+    try {
+      const favs = await this.prisma.favorites.findFirst();
+      if (!favs) {
+        await this.prisma.favorites.create({
+          data: {
+            favsArtists: [],
+            favsAlbums: [],
+            favsTracks: [],
+          },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async findAll() {
     const favs = await this.prisma.favorites.findFirst();

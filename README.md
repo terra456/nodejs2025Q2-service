@@ -14,13 +14,7 @@ git clone git@github.com:terra456/nodejs2025Q2-service.git
 ## Change branch to develop
 
 ```
-git checkout develop
-```
-
-## Installing NPM modules
-
-```
-npm install
+git checkout develop2
 ```
 
 ## Rename .env.example
@@ -29,17 +23,7 @@ npm install
 mv .env.example .env
 ```
 
-## Running application
 
-```
-npm start 
-```
-
-## Running application in dev mode
-
-``` 
-npm run start:dev
-```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI (with swagger) documentation by typing http://localhost:4000/doc/.
