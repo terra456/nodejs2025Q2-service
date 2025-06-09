@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { DBService } from 'src/db.service';
 import { UUID } from 'node:crypto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private db: DBService) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createAlbumDto: CreateAlbumDto) {
-    return await this.db.albums.add(createAlbumDto);
+    return await this.prisma.album.create({ data: createAlbumDto });
   }
 
   async findAll() {
-    return await this.db.albums.getAll();
+    return await this.prisma.album.findMany();
   }
 
   async findOne(id: UUID) {
-    const album = await this.db.albums.get(id);
+    const album = await this.prisma.album.findUnique({ where: { id } });
     if (!album) {
       throw new Error('Not found');
     }
@@ -25,7 +25,10 @@ export class AlbumService {
   }
 
   async update(id: UUID, updateAlbumDto: UpdateAlbumDto) {
-    const album = await this.db.albums.change(id, updateAlbumDto);
+    const album = await this.prisma.album.update({
+      where: { id },
+      data: updateAlbumDto,
+    });
     if (!album) {
       throw new Error('Not found');
     }
@@ -33,7 +36,7 @@ export class AlbumService {
   }
 
   async remove(id: UUID) {
-    const album = await this.db.deleteAlbum(id);
+    const album = await this.prisma.album.delete({ where: { id } });
     if (!album) {
       throw new Error('Not found');
     }

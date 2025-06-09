@@ -31,8 +31,12 @@ export class FavoriteController {
     type: Favorite,
   })
   async findAll() {
-    const res = await this.favoriteService.findAll();
-    return res;
+    try {
+      const res = await this.favoriteService.findAll();
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('track/:id')
@@ -54,6 +58,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -75,6 +80,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -96,6 +102,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -117,6 +124,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -138,6 +146,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -159,6 +168,7 @@ export class FavoriteController {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

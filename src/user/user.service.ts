@@ -5,9 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { randomUUID, UUID } from 'node:crypto';
+import { UUID } from 'node:crypto';
 import { UpdatePassword } from 'src/types/types';
-
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -18,7 +17,6 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.prisma.user.create({
       data: {
-        id: randomUUID(),
         createdAt: Date.now() >>> 0,
         updatedAt: Date.now() >>> 0,
         version: 1,
