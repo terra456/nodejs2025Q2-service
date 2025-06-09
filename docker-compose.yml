@@ -1,0 +1,44 @@
+services:
+  postgres_db:
+    image: postgres:17.5-alpine3.22
+    hostname: ${DB_HOST}
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    networks:
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
+  server:
+    build: 
+      context: .  
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    stdin_open: true
+    tty: true  # Keeps the container running for debugging
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - prisma-network
+
+networks:
+  prisma-network:
+    name: prisma-network
+
+volumes:
+  postgres_data:
