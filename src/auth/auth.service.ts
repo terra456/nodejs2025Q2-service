@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
 
   async login(login: string, password: string): Promise<Auth> {
     const user = await this.usersService.findByLogin(login);
-    if (!user || user?.password !== password) {
+    if (!user || bcrypt.compareSync(user.password, password)) {
       throw new HttpException(
         'Incorrect login or password',
         HttpStatus.FORBIDDEN,

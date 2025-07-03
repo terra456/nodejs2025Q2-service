@@ -8,19 +8,25 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UUID } from 'node:crypto';
 import { UpdatePassword } from 'src/types/types';
 import { PrismaService } from '../prisma.service';
+import * as bcrypt from 'bcrypt';
+
+const saltRounds = 10;
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashPassword = bcrypt.hashSync(createUserDto.password, salt);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.prisma.user.create({
       data: {
         createdAt: Math.floor(Date.now() / 1000) >>> 0,
         updatedAt: Math.floor(Date.now() / 1000) >>> 0,
         version: 1,
-        ...createUserDto,
+        login: createUserDto.login,
+        password: hashPassword,
       },
     });
     return user;
@@ -57,16 +63,18 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-    if (user.password !== updatePassword.oldPassword) {
+    if (!bcrypt.compareSync(updatePassword.oldPassword, user.password)) {
       throw new HttpException('old password is wrong', HttpStatus.FORBIDDEN);
     }
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashPassword = bcrypt.hashSync(updatePassword.newPassword, salt);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...newUser } = await this.prisma.user.update({
       where: { id },
       data: {
         version: user.version + 1,
         updatedAt: Math.ceil(Date.now() / 1000) >>> 0,
-        password: updatePassword.newPassword,
+        password: hashPassword,
       },
     });
     return newUser;
