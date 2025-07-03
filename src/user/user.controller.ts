@@ -44,6 +44,7 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.create(createUserDto);
+      console.log('create user', user);
       return user;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -73,6 +74,7 @@ export class UserController {
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
       const user = await this.userService.findOne(id);
+      console.log('get by id user', user);
       if (user) {
         return user;
       }

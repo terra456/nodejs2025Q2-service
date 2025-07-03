@@ -17,8 +17,8 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.prisma.user.create({
       data: {
-        createdAt: Date.now() >>> 0,
-        updatedAt: Date.now() >>> 0,
+        createdAt: Math.floor(Date.now() / 1000) >>> 0,
+        updatedAt: Math.floor(Date.now() / 1000) >>> 0,
         version: 1,
         ...createUserDto,
       },
@@ -41,6 +41,17 @@ export class UserService {
     return user;
   }
 
+  async findByLogin(login: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const user = await this.prisma.user.findFirst({
+      where: { login },
+    });
+    if (!user) {
+      throw new Error('Not found');
+    }
+    return user;
+  }
+
   async updatePassword(id: UUID, updatePassword: UpdatePassword) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
@@ -54,7 +65,7 @@ export class UserService {
       where: { id },
       data: {
         version: user.version + 1,
-        updatedAt: Date.now() >>> 0,
+        updatedAt: Math.ceil(Date.now() / 1000) >>> 0,
         password: updatePassword.newPassword,
       },
     });

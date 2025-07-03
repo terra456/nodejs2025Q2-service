@@ -3,7 +3,7 @@ services:
     image: postgres:17.5-alpine3.22
     hostname: ${DB_HOST}
     container_name: postgres_db
-    restart: always
+    restart: always 
     env_file:
       - .env
     environment:
