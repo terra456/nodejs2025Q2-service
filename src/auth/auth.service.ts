@@ -23,11 +23,36 @@ export class AuthService {
     const payload = { userId: user.id, login: user.login };
     return {
       accessToken: await this.jwtService.signAsync(payload),
-      refreshToken: '',
+      refreshToken: await this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+        expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+      }),
     };
   }
 
   async signup(user: CreateUserDto) {
     return this.usersService.create(user);
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const user = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+      });
+      if (!user) {
+        throw new HttpException('Incorrect token', HttpStatus.FORBIDDEN);
+      }
+      const payload = { userId: user.userId, login: user.login };
+
+      return {
+        accessToken: await this.jwtService.signAsync(payload),
+        refreshToken: await this.jwtService.signAsync(payload, {
+          secret: process.env.JWT_SECRET_REFRESH_KEY,
+          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+        }),
+      };
+    } catch {
+      throw new HttpException('Incorrect token', HttpStatus.FORBIDDEN);
+    }
   }
 }

@@ -19,6 +19,7 @@ import { Auth } from './entities/auth.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { Public } from './public.decorator';
+import { RefershDto } from './dto/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,10 +41,16 @@ export class AuthController {
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @ApiForbiddenResponse({ description: 'Incorrect login or password' })
-  refresh(@Body() { refreshToken }: { refreshToken: string }) {
-    //TODO implement refresh
-    return refreshToken;
+  @ApiOkResponse({
+    description: 'Successful refresh',
+    type: [Auth],
+  })
+  @ApiForbiddenResponse({ description: 'Incorrect token' })
+  @ApiBadRequestResponse({
+    description: 'No refresh token',
+  })
+  refresh(@Body() { refreshToken }: RefershDto) {
+    return this.authService.refresh(refreshToken);
   }
 
   @Public()
