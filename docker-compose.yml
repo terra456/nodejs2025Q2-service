@@ -3,7 +3,7 @@ services:
     image: postgres:17.5-alpine3.22
     hostname: ${DB_HOST}
     container_name: postgres_db
-    restart: always 
+    restart: always
     env_file:
       - .env
     environment:
@@ -15,19 +15,21 @@ services:
     networks:
       - prisma-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
       interval: 5s
       timeout: 2s
       retries: 20
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
 
   server:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
       - ${PORT}:${PORT}
     stdin_open: true
-    tty: true  # Keeps the container running for debugging
+    tty: true # Keeps the container running for debugging
     restart: always
     depends_on:
       postgres_db:
@@ -35,7 +37,7 @@ services:
     env_file:
       - .env
     volumes:
-    - ./src:/app/src
+      - ./server_data:/app/data
     networks:
       - prisma-network
 
@@ -46,3 +48,6 @@ networks:
 
 volumes:
   postgres_data:
+    external: true
+  server_data:
+    external: true
