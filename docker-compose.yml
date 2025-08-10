@@ -38,6 +38,7 @@ services:
       - .env
     volumes:
       - ./server_data:/app/data
+      - ./src:/app/src
     networks:
       - prisma-network
 
