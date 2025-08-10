@@ -7,7 +7,9 @@ import 'dotenv/config';
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'fatal', 'error', 'warn', 'debug', 'verbose'],
+  });
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
     .setDescription('Home music library service')
