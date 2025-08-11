@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { DBService } from 'src/db.service';
 import { UUID } from 'node:crypto';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private db: DBService) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createArtistDto: CreateArtistDto) {
-    return await this.db.artists.add(createArtistDto);
+    return await this.prisma.artist.create({ data: createArtistDto });
   }
 
   async findAll() {
-    return await this.db.artists.getAll();
+    return await this.prisma.artist.findMany();
   }
 
   async findOne(id: UUID) {
-    const artist = await this.db.artists.get(id);
+    const artist = await this.prisma.artist.findUnique({ where: { id } });
     if (!artist) {
       throw new Error('Not found');
     }
@@ -25,7 +25,10 @@ export class ArtistService {
   }
 
   async update(id: UUID, updateArtistDto: UpdateArtistDto) {
-    const artist = await this.db.artists.change(id, updateArtistDto);
+    const artist = await this.prisma.artist.update({
+      where: { id },
+      data: updateArtistDto,
+    });
     if (!artist) {
       throw new Error('Not found');
     }
@@ -33,7 +36,7 @@ export class ArtistService {
   }
 
   async remove(id: UUID) {
-    const artist = await this.db.deleteArtist(id);
+    const artist = await this.prisma.artist.delete({ where: { id } });
     if (!artist) {
       throw new Error('Not found');
     }

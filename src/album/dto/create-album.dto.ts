@@ -7,7 +7,6 @@ export class CreateAlbumDto {
     type: 'string',
     example: 'Innuendo',
   })
-  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -16,7 +15,6 @@ export class CreateAlbumDto {
     type: 'number',
     example: 1991,
   })
-  @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
   year: number;
@@ -27,6 +25,5 @@ export class CreateAlbumDto {
     description: 'refers to Artist',
     nullable: true,
   })
-  @ApiProperty()
   artistId: UUID | null;
 }
