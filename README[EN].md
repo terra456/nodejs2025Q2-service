@@ -1,11 +1,11 @@
 # Home Library Service
 
-REST-сервер на Nest.js и typescript. Пользователи имеют возможность создавать, изменять и удалять данные об артистах, треках и альбомах. А также добавлять их в избранное.
-Данные сохраняются в PostgreSQL, Prisma используется для доступа к базе данных.
-Приложение использует для запуска Docker multi-container.
-Также реализована аутентификация и авторизация с использованием JWT (Access and Refresh tokens).
+REST-server with Nestjs and typescript. Users can create, read, update, delete data about Artists, Tracks and Albums, add them to Favorites in their own Home Library!
+Data stored in PostgreSQL and include Prisma to communicate with your database.
+Application builded and run multi-container using Docker.
+Also implemented Authentication and Authorization with JWT (Access and Refresh tokens).
 
-## Подробное описание
+## Detaild description
 
 [REST Service](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/rest-service/assignment.md)
 
@@ -13,18 +13,18 @@ REST-сервер на Nest.js и typescript. Пользователи имею�
 
 [Logging & Error Handling and Authentication and Authorization](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/logging-error-authentication-authorization/assignment.md)
 
-## Подготовка
+## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
-## Загрузка
+## Downloading
 
 ```
 git clone git@github.com:terra456/nodejs2025Q2-service.git
 ```
 
-## Переименовать .env.example
+## Rename .env.example
 
 ```
 cp .env.example .env
@@ -36,11 +36,12 @@ cp .env.example .env
 docker compose -f docker-compose.yml up --build -d
 ```
 
-Сервер доступен по адресу http://localhost:4000
+Server is avaliable http://localhost:4000
 
-После запуска приложения документацию можно просматривать http://localhost:4000/doc/.
+After starting the app on port (4000 as default) you can open
+in your browser OpenAPI (with swagger) documentation by typing http://localhost:4000/doc/.
 
-Логи сервера записываются в файлы в папке server_data.
+Logs are stored at folder server_data.
 
 ## Testing
 
