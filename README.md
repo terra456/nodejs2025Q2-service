@@ -1,5 +1,16 @@
 # Home Library Service
 
+REST-server with Nestjs and typescript. Users can create, read, update, delete data about Artists, Tracks and Albums, add them to Favorites in their own Home Library!
+Data stored in PostgreSQL and include Prisma to communicate with your database.
+Application builded and run multi-container using Docker.
+Also implemented Authentication and Authorization with JWT (Access and Refresh tokens).
+
+## Detaild description
+
+[REST Service](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/rest-service/assignment.md)
+[Containerization, Docker and Database & ORM](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/containerization-database-orm/assignment.md)
+[Logging & Error Handling and Authentication and Authorization](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/logging-error-authentication-authorization/assignment.md)
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -11,19 +22,19 @@
 git clone git@github.com:terra456/nodejs2025Q2-service.git
 ```
 
-## Change branch to develop
-
-```
-git checkout develop2
-```
-
 ## Rename .env.example
 
 ```
-mv .env.example .env
+cp .env.example .env
 ```
 
+## Build docker image
 
+```
+docker compose -f docker-compose.yml up --build -d
+```
+
+Server is avaliable http://localhost:4000
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI (with swagger) documentation by typing http://localhost:4000/doc/.
@@ -65,4 +76,3 @@ npm run lint
 ```
 npm run format
 ```
-
